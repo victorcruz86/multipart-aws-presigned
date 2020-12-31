@@ -1,0 +1,28 @@
+<div class="item-upload">
+  <div class="progress-circle-upload" [ngClass]="{'completed': data.progress >= 100}">
+    <i class="fa fa-file"></i>
+    <circle-progress
+      *ngIf="!data.progress || data.progress < 100"
+      [percent]="data.progress"
+      [radius]="40"
+      [outerStrokeWidth]="3"
+      [innerStrokeWidth]="0"
+      [outerStrokeColor]="'#4882C2'"
+      [innerStrokeColor]="'##E7E8EA'"
+      [animation]="false"
+      [animationDuration]="300"
+      [showSubtitle]="false"
+      [space]="-10"
+    ></circle-progress>
+    <div class="image-preview" *ngIf="data.progress >= 100 && preview"
+         [ngStyle]="{ 'background-image': 'url(' + preview + ')'}"></div>
+  </div>
+
+  <div class="footer-left">
+    <span>{{ data.file.name }}</span>
+  </div>
+
+  <div class="footer-right">
+    <span class="ext">{{ data.file.size | bytes }}</span>
+  </div>
+</div>

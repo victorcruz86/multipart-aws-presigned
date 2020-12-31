@@ -1,9 +1,9 @@
 {
   "name": "multipart-aws-presigned",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --live-reload false --hmr",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -19,6 +19,10 @@
     "@angular/platform-browser": "~9.0.1",
     "@angular/platform-browser-dynamic": "~9.0.1",
     "@angular/router": "~9.0.1",
+    "bootstrap": "^4.5.3",
+    "ng-circle-progress": "^1.6.0",
+    "ngx-bootstrap": "^6.2.0",
+    "ngx-file-drop": "^10.1.1",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"

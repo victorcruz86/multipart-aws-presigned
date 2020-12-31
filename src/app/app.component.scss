@@ -1,0 +1,303 @@
+.aws-s3-upload {
+  .header-upload {
+    position: relative;
+
+    .title-upload {
+      margin-bottom: 14px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #6F6F6F;
+    }
+
+    .group-icons-gallery {
+      position: absolute;
+      right: -4px;
+      bottom: -10px;
+
+      button {
+        background-color: transparent;
+        color: #D5D5D5;
+        font-size: 19px;
+      }
+    }
+  }
+
+  .global-progress {
+    margin-top: 10px;
+
+    .progress {
+      height: 12px;
+    }
+
+    span {
+      font-size: 11px;
+      margin-right: 4px;
+    }
+
+    .completed i {
+      color: #28A745;
+    }
+
+    .updating i {
+      color: #17A2B8;
+    }
+
+    .processing i {
+      color: #FFC107;
+    }
+
+    .pending i {
+      color: #6C757D;
+    }
+
+    .failed i {
+      color: #DC3545;
+    }
+  }
+
+  ::ng-deep {
+    cf-list-view {
+      .cf-list-view {
+        position: absolute;
+      }
+    }
+  }
+}
+
+.show-more {
+  margin-top: 4px;
+}
+
+.mng-drap-drop-folder {
+  ::ng-deep {
+    .ngx-file-drop__drop-zone {
+      height: 25em;
+      width: 100%;
+      padding: 1rem;
+      text-align: left;
+      border: dashed 2px #D6D6D6;
+      position: relative;
+      margin: 0 auto;
+      overflow: auto;
+      border-radius: 0px;
+    }
+
+    .ngx-file-drop__content {
+      align-items: center;
+      color: inherit;
+      display: flex;
+      height: 100px;
+      justify-content: center;
+      height: auto;
+    }
+
+    cf-aws-item-upload {
+      width: 100%
+    }
+  }
+
+  .file-list {
+    width: 100%;
+  }
+
+  .folder-box {
+    & > span {
+      hr {
+        margin-top: 3px;
+        margin-bottom: 8px;
+      }
+    }
+  }
+
+  .margin-30 {
+    margin-bottom: 30px;
+  }
+
+  // ---
+
+  .wrapper-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
+    grid-gap: 10px;
+    grid-auto-rows: minmax(100px, auto);
+
+    & > div {
+      max-width: 16em;
+      justify-content: center;
+      align-items: center;
+      border: 2px solid #d6d6d6;
+      margin-bottom: 45px;
+    }
+
+    & > .inline-item {
+      max-width: 100%;
+    }
+  }
+
+  .wrapper-grid.inline-wrapper {
+    grid-template-columns: repeat(1, 1fr);
+    grid-gap: 0px;
+    grid-auto-rows: minmax(0, auto);
+
+    & > div {
+      border: 1px solid #d6d6d6;
+      margin-bottom: 0px;
+    }
+  }
+
+  // ---
+
+  .upload-hint {
+    position: absolute;
+    pointer-events: none;
+    top: 35%;
+    right: 0;
+    left: 0;
+
+    & * {
+      pointer-events: none;
+    }
+
+    div {
+      text-align: center;
+    }
+
+    i {
+      color: #cdcdcd;
+      font-size: 60px;
+      transition: font-size 500ms ease-in-out;
+      -webkit-transition: font-size 500ms ease-in-out;
+    }
+  }
+
+  .bottom-messages {
+
+  }
+}
+
+// ---
+
+::ng-deep {
+  .jw-modal-body {
+    padding: 0 20px 55px 20px !important;
+    position: relative;
+  }
+
+  .body-details {
+    h4 {
+      margin: 0 4px 0;
+      padding: 9px 0px 0px 0px;
+    }
+
+    .compressed-grid {
+      padding: 0 5px 0 0px;
+      width: 100%;
+      overflow: auto;
+      max-height: 45vh;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: 4px;
+
+      & > div {
+        height: 8em;
+        width: 100%;
+        //max-width: 16em;
+        margin: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid black;
+        background-color: #f7f8fa;
+      }
+    }
+
+    button {
+      position: absolute;
+      bottom: 8px;
+      right: 18px;
+    }
+
+    .progress-modal-upload {
+      progressbar {
+        margin-top: 6px;
+      }
+    }
+  }
+}
+
+// ==============================================
+// Item Upload
+// ==============================================
+
+.item-upload {
+  position: relative;
+  width: 100%;
+
+  a {
+    text-decoration: none;
+  }
+
+  div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .progress-circle-upload {
+    i {
+      position: absolute;
+      color: #E3E3E3;
+      font-size: 60px;
+    }
+
+    circle-progress {
+      z-index: 1;
+    }
+  }
+
+  .details {
+    height: 22px;
+
+    a {
+      font-size: 12px;
+      margin-bottom: 3px;
+    }
+  }
+
+  .footer-left {
+    position: absolute;
+    color: #878787;
+
+    span {
+      margin-top: 4px;
+      width: 12em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .footer-right {
+    position: absolute;
+    right: 0;
+
+    span {
+      background-color: #898989;
+      color: #f1f1f1;
+      font-size: 10px;
+      padding: 0 5px 0px 3px;
+      margin-top: 5px;
+
+      &.image-ext {
+        background-color: #79B9F6;
+        color: #fff;
+      }
+
+      &.zip-ext {
+        background-color: #D6CF26;
+        color: #fff;
+      }
+    }
+  }
+}
