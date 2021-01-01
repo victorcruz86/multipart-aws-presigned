@@ -1,27 +1,130 @@
-# MultipartAwsPresigned
+# Angular - Multipart Aws Pre-signed URL
+![enter image description here](https://res.cloudinary.com/du4jrqkyo/image/upload/v1609492542/multipart-aws-presigned.png)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.0.2.
+Example
 
-## Development server
+https://multipart-aws-presigned.stackblitz.io/ 
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+https://stackblitz.com/edit/multipart-aws-presigned?file=src/app/app.component.html 
 
-## Code scaffolding
+To upload large files into an S3 bucket using pre-signed url it is necessary to use multipart upload, basically splitting the file into many parts which allows parallel upload.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Here we will leave a basic example of the backend and frontend.
 
-## Build
+## Backend (Serveless Typescript)
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+```
+const AWSData = {
+  accessKeyId: 'Access Key',
+  secretAccessKey: 'Secret Access Key'
+};
+```
 
-## Running unit tests
+There are 3 endpoints 
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+#### Endpoint 1: /start-upload
 
-## Running end-to-end tests
+Ask S3 to start the multipart upload, the answer is an UploadId associated to each part that will be uploaded.
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+```
+export const start: APIGatewayProxyHandler = async (event, _context) => {
+  const params = {
+    Bucket: event.queryStringParameters.bucket, /* Bucket name */
+    Key: event.queryStringParameters.fileName /* File name */
+  };
 
-## Further help
+  const s3 = new AWS.S3(AWSData);
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+  const res = await s3.createMultipartUpload(params).promise()
+
+  return {
+    statusCode: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': true,
+    },
+    body: JSON.stringify({
+      data: {
+        uploadId: res.UploadId
+      }
+    })
+  };
+}
+```
+
+#### Endpoint 2: /get-upload-url
+
+Create a pre-signed URL for each part that was split for the file to be uploaded.
+
+```
+export const uploadUrl: APIGatewayProxyHandler = async (event, _context) => {
+  let params = {
+    Bucket: event.queryStringParameters.bucket, /* Bucket name */
+    Key: event.queryStringParameters.fileName, /* File name */
+    PartNumber: event.queryStringParameters.partNumber, /* Part to create pre-signed url */
+    UploadId: event.queryStringParameters.uploadId /* UploadId from Endpoint 1 response */
+  };
+
+  const s3 = new AWS.S3(AWSData);
+
+  const res = await s3.getSignedUrl('uploadPart', params)
+
+  return {
+    statusCode: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': true,
+    },
+    body: JSON.stringify(res)
+  };
+}
+```
+
+#### Endpoint 3: /complete-upload
+
+After uploading all the parts of the file it is necessary to inform that they have already been uploaded and this will make the object assemble correctly in S3.
+
+```
+export const completeUpload: APIGatewayProxyHandler = async (event, _context) => {
+  // Parse the post body
+  const bodyData = JSON.parse(event.body);
+
+  const s3 = new AWS.S3(AWSData);
+
+  const params: any = {
+    Bucket: bodyData.bucket, /* Bucket name */
+    Key: bodyData.fileName, /* File name */
+    MultipartUpload: {
+      Parts: bodyData.parts /* Parts uploaded */
+    },
+    UploadId: bodyData.uploadId /* UploadId from Endpoint 1 response */
+  }
+
+  const data = await s3.completeMultipartUpload(params).promise()
+
+  return {
+    statusCode: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': true,
+      // 'Access-Control-Allow-Methods': 'OPTIONS,POST',
+      // 'Access-Control-Allow-Headers': 'Content-Type',
+    },
+    body: JSON.stringify(data)
+  };
+}
+```
+
+## Frontend (Angular 9)
+
+The file is divided into 10MB parts 
+
+Having the file, the multipart upload to Endpoint 1 is requested
+
+With the UploadId you divide the file in several parts of 10MB and from each one you get the pre-signed url upload using the Endpoint 2
+
+A PUT is made with the part converted to blob to the pre-signed url obtained in Endpoint 2
+
+When you finish uploading each part you make a last request the Endpoint 3
+
+In the example of all this the function uploadMultipartFile

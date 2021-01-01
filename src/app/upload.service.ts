@@ -22,8 +22,6 @@ export class UploadService {
   uploadProgress$ = new EventEmitter<any>();
   finishedProgress$ = new EventEmitter<any>();
 
-  // url: string = 'https://api-dam.mango-soft.com/v3/prod';
-  // url: string = 'http://localhost:3000/dev';
   url: string = 'https://2qczmfih6j.execute-api.us-east-1.amazonaws.com/prod';
 
   constructor(private httpClient: HttpClient) {
