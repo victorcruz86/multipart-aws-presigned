@@ -2,7 +2,6 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { HttpClient, HttpEvent, HttpEventType, HttpParams, HttpRequest, HttpResponse } from '@angular/common/http';
 
 export interface IS3Data {
-  bucket: string;
   folder: string;
   region: string;
   accessKeyId?: string;
@@ -12,7 +11,6 @@ export interface IS3Data {
 export interface IParamStartUpload {
   fileName: string;
   fileType: string;
-  bucket: string;
 }
 
 @Injectable({
@@ -40,8 +38,7 @@ export class UploadService {
   private startUpload(params: IParamStartUpload): Promise<any> {
     const httpParams = new HttpParams()
       .set('fileName', encodeURIComponent(params.fileName))
-      .set('fileType', encodeURIComponent(params.fileType))
-      .set('bucket', encodeURIComponent(params.bucket));
+      .set('fileType', encodeURIComponent(params.fileType));
 
     return this.httpClient.get(`${this.url}/start-upload`, { params: httpParams }).toPromise();
   }
@@ -51,13 +48,11 @@ export class UploadService {
    *
    * @param file
    * @param tokenEmit
-   * @param dataS3
    */
-  async uploadMultipartFile(file: any, tokenEmit: string, dataS3: IS3Data) {
+  async uploadMultipartFile(file: any, tokenEmit: string) {
     const uploadStartResponse = await this.startUpload({
       fileName: file.name,
-      fileType: file.type,
-      bucket: dataS3.bucket
+      fileType: file.type
     });
 
     try {
@@ -79,7 +74,6 @@ export class UploadService {
         const httpParams = new HttpParams()
           .set('fileName', encodeURIComponent(file.name))
           .set('fileType', encodeURIComponent(file.type))
-          .set('bucket', encodeURIComponent(dataS3.bucket))
           .set('partNumber', index.toString())
           .set('uploadId', uploadStartResponse.data.uploadId);
 
@@ -130,8 +124,7 @@ export class UploadService {
                   parts: uploadPartsArray.sort((a, b) => {
                     return a.PartNumber - b.PartNumber;
                   }),
-                  uploadId: uploadStartResponse.data.uploadId,
-                  bucket: dataS3.bucket
+                  uploadId: uploadStartResponse.data.uploadId
                 }).toPromise()
                   .then(res => {
                     this.finishedProgress$.emit({

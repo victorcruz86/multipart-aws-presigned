@@ -25,7 +25,7 @@ Ask S3 to start the multipart upload, the answer is an UploadId associated to ea
 ```
 export const start: APIGatewayProxyHandler = async (event, _context) => {
   const params = {
-    Bucket: event.queryStringParameters.bucket, /* Bucket name */
+    Bucket: bucketConfig.bucket, /* Bucket name */
     Key: event.queryStringParameters.fileName /* File name */
   };
 
@@ -51,7 +51,7 @@ Create a pre-signed URL for each part that was split for the file to be uploaded
 ```
 export const uploadUrl: APIGatewayProxyHandler = async (event, _context) => {
   let params = {
-    Bucket: event.queryStringParameters.bucket, /* Bucket name */
+    Bucket: bucketConfig.bucket, /* Bucket name */
     Key: event.queryStringParameters.fileName, /* File name */
     PartNumber: event.queryStringParameters.partNumber, /* Part to create pre-signed url */
     UploadId: event.queryStringParameters.uploadId /* UploadId from Endpoint 1 response */

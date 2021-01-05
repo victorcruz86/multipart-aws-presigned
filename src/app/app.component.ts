@@ -11,18 +11,10 @@ export class AppComponent implements OnInit {
   files: NgxFileDropEntry[] = [];
   listFilesToUpload = [];
 
-  dataS3: IS3Data;
-
   constructor(private awsS3UploadService: UploadService) {
   }
 
   ngOnInit() {
-    this.dataS3 = {
-      bucket: 'multipart-aws-presigned',
-      folder: '/',
-      region: 'us-east-1'
-    };
-
     // uploader events
 
     this.awsS3UploadService.uploadProgress$
@@ -74,7 +66,7 @@ export class AppComponent implements OnInit {
 
     this.listFilesToUpload.push(fileUpload);
 
-    await this.awsS3UploadService.uploadMultipartFile(file, fileUpload.token, this.dataS3);
+    await this.awsS3UploadService.uploadMultipartFile(file, fileUpload.token);
   }
 
   generateToken() {
