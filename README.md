@@ -16,13 +16,6 @@ Here we will leave a basic example of the backend and frontend.
 
 ## Backend (Serveless Typescript)
 
-```
-const AWSData = {
-  accessKeyId: 'Access Key',
-  secretAccessKey: 'Secret Access Key'
-};
-```
-
 There are 3 endpoints 
 
 #### Endpoint 1: /start-upload
@@ -42,10 +35,6 @@ export const start: APIGatewayProxyHandler = async (event, _context) => {
 
   return {
     statusCode: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Credentials': true,
-    },
     body: JSON.stringify({
       data: {
         uploadId: res.UploadId
@@ -74,10 +63,6 @@ export const uploadUrl: APIGatewayProxyHandler = async (event, _context) => {
 
   return {
     statusCode: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Credentials': true,
-    },
     body: JSON.stringify(res)
   };
 }
@@ -107,12 +92,6 @@ export const completeUpload: APIGatewayProxyHandler = async (event, _context) =>
 
   return {
     statusCode: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Credentials': true,
-      // 'Access-Control-Allow-Methods': 'OPTIONS,POST',
-      // 'Access-Control-Allow-Headers': 'Content-Type',
-    },
     body: JSON.stringify(data)
   };
 }

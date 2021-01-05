@@ -23,6 +23,7 @@ export class UploadService {
   finishedProgress$ = new EventEmitter<any>();
 
   url: string = 'https://2qczmfih6j.execute-api.us-east-1.amazonaws.com/prod';
+  // url: string = 'http://localhost:3000/dev';
 
   constructor(private httpClient: HttpClient) {
   }
